@@ -19,14 +19,9 @@ public class RestApiTest {
     @Test(priority = 1)
     @Description("Validate the GET request")
     public void testGetRequest() {
-        step("Perform GET request");
         Response response = RestAssured.get(BASE_URL);
-
-        step("Assert the status code");
         int statusCode = response.getStatusCode();
         Assert.assertEquals(statusCode, 200, "Unexpected status code");
-
-        step("Assert the response body or perform additional validations if needed");
         String responseBody = response.getBody().asString();
         Assert.assertTrue(responseBody.contains("title"), "Response body doesn't contain expected content");
     }
@@ -36,7 +31,6 @@ public class RestApiTest {
     @Description("Validate the POST request")
     public void testPostRequest() {
 
-        step("Preparing POST request payload");
         String requestBody = "{\n" +
                 "   \"name\": \"Apple MacBook Pro 16\",\n" +
                 "   \"data\": {\n" +
@@ -47,7 +41,6 @@ public class RestApiTest {
                 "   }\n" +
                 "}";
 
-        step("Perform POST request");
         Response response = RestAssured
                 .given()
                 .contentType(ContentType.JSON)
@@ -55,11 +48,9 @@ public class RestApiTest {
                 .when()
                 .post("https://api.restful-api.dev/objects");
 
-        step("Assert the status code");
         System.out.println(response.getBody());
         int statusCode = response.getStatusCode();
         Assert.assertEquals(statusCode, 200, "Unexpected status code");
-        step("Assert the response body or perform additional validations if needed");
         String responseBody = response.getBody().asString();
         Assert.assertTrue(responseBody.contains("Apple MacBook Pro 16"), "Response body doesn't contain expected content");
         Assert.assertTrue(responseBody.contains("Intel Core i9"), "Response body doesn't contain expected content");
@@ -72,7 +63,6 @@ public class RestApiTest {
     @Test(priority = 3)
     @Description("Validate the PUT request")
     public void testPutRequest() {
-        step("Preparing PUT request payload");
         String requestBody = "{\n" +
                 "   \"name\": \"Updated MacBook Pro 16\",\n" +
                 "   \"data\": {\n" +
@@ -84,7 +74,6 @@ public class RestApiTest {
                 "   }\n" +
                 "}";
 
-        step("Perform PUT request");
         Response response = RestAssured
                 .given()
                 .contentType(ContentType.JSON)
@@ -92,15 +81,13 @@ public class RestApiTest {
                 .when()
                 .put("https://api.restful-api.dev/objects/" + objectId);
 
-        step("Assert the status code");
         int statusCode = response.getStatusCode();
         Assert.assertEquals(statusCode, 200, "Unexpected status code");
-        step("Assert the response body or perform additional validations if needed");
         String responseBody = response.getBody().asString();
+        String id = response.jsonPath().getString("id");
         Assert.assertTrue(responseBody.contains("Updated MacBook Pro 16"), "Response body doesn't contain expected content");
         Assert.assertTrue(responseBody.contains("Intel Core i9"), "Response body doesn't contain expected content");
         Assert.assertTrue(responseBody.contains("silver"), "Response body doesn't contain expected content");
-        String id = response.jsonPath().getString("id");
         System.out.println("Updated ID: " + id);
     }
 
@@ -109,15 +96,12 @@ public class RestApiTest {
     @Description("Validate the DELETE request")
     @Story("Validate DELETE Request")
     public void testDeleteRequest() {
-        step("Perform DELETE request");
         Response response = RestAssured
                 .when()
                 .delete("https://api.restful-api.dev/objects/" + objectId);
 
-        step("Assert the status code");
         int statusCode = response.getStatusCode();
         Assert.assertEquals(statusCode, 200, "Unexpected status code");
-        step("Assert the response body or perform additional validations if needed");
         String responseBody = response.getBody().asString();
         Assert.assertEquals(response.jsonPath().getString("message"), "Object with id = " + objectId + " has been deleted.", "Incorrect deletion message");
     }
